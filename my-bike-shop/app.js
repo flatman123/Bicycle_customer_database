@@ -1,19 +1,34 @@
-var bike_main = (function() {
-	// some code
+var Bicycle_main = (function(username, password) {
+	var userID;
+	this.username = username;
+	this.password = password;
+	
+	return {
+		publicAccess: function(u,p) {
+			console.log(u + p);
+			
+		}
+	}
 })();
-
-
 
 
 
 var uiController = (function() {
+	var domStrings;
+
+	domStrings = {
+		user: '.l_user';
+		pass: '.l_pass'
+	};
+	
 
 })();
 
 
 
+var appController = (function(uiCtrl, bikeMain) {
 
-var appController = (function() {
+	bikeMain.publicAccess('jmcintyre', 'Jsndf89h24@');
 
-	// some code
-})();
+
+})(uiController, Bicycle_main);

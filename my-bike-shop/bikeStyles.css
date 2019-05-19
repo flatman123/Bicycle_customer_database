@@ -1,4 +1,4 @@
-.login_Section {
+.login_Container {
 	width: 100%;
 	position: relative;
 	top: 200px;
@@ -14,11 +14,7 @@
 	border-radius: 6px;
 }
 
-.userPass {
-	width: 50px;
-}
-
-.user_Pass {
+.user_and_Pass {
 	position: relative;
 	top: 100px;
 	margin-left: 15%;
@@ -29,4 +25,8 @@
 	top: 110px;
 	margin-left: 135px;
 
+}
+
+.customer_Container {
+	display: none;
 }
