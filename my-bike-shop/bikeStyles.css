@@ -1,8 +1,9 @@
-.login_Container {
+.user_login_Container {
 	width: 100%;
 	position: relative;
 	top: 200px;
 	margin-left: 120px;
+	/*display: none;*/
 }
 
 
@@ -24,9 +25,26 @@
 	position: relative;
 	top: 110px;
 	margin-left: 135px;
-
 }
 
-.customer_Container {
-	display: none;
+
+.customer_container {
+	width: 100%;
+	position: relative;
+	top: 220px;
+	margin-left: 120px;
+	/*display: none;*/
+}
+
+.customer_data_area {
+	width: 350px;
+	height: 300px;
+	margin-left: 60px;
+	background-color: #0A5E7F;
+	border-radius: 6px;
+}
+
+.c_info {
+	margin-left: 55px;
+	padding-top: 15px;
 }
