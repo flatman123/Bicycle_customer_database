@@ -15,7 +15,7 @@ var Bicycle_main = (function(username, password) {
 
 
 var uiController = (function() {
-	var domStrings;
+	var domStrings,fetchCredentials;
 
 	domStrings = {
 		user: '.l_user',
@@ -23,15 +23,15 @@ var uiController = (function() {
 		loginBtn: '.signinBtn'
 	};
 
-
+	fetchCredentials = {
+		username: document.querySelector(domStrings.user).value,
+		password: document.querySelector(domStrings.pass).value
+	};
 
 	return {
 		getUserCredentials: function() {
-			//Get user Credentials from login page
-			return {
-				username: document.querySelector(domStrings.user).value,
-				password: document.querySelector(domStrings.pass).value
-			};
+			console.log(fetchCredentials.username);
+			;
 		},
 		sendDomStrings: function() {
 			return domStrings;
@@ -41,44 +41,33 @@ var uiController = (function() {
 
 
 var appController = (function(uiCtrl, bikeMain) {
-	var getDoms, getEventListeners,usrCredentials,doms;
+	var getDoms, getEventListeners,doms,sendCredentials;
 
 	doms = uiCtrl.sendDomStrings();
-	
-	function getEventListeners(){
 
+	getEventListeners = function(){
 		document.querySelector(doms.loginBtn).addEventListener('click',sendCredentials);
 		document.addEventListener('keypress', function(kpEvent) {
 
-		if (kpEvent.keyCode === 13 || kpEvent.which === 13) {
-
-			if (doms.user !== '' && doms.pass !== '') {
+			if (kpEvent.keyCode === 13 || kpEvent.which === 13) {
 				sendCredentials();
-			} else if (doms.user !== '' && doms.pass === '') {
-				alert('Please Enter a Password Before Submitting!');
-			} else if (doms.user === '' && doms.pass !== '') {
-				alert('Please Enter your Username!');
-			} else {
-				alert('Please enteryour credentials!');
 			}
-		}
-		console.log(kpEvent.keyCode);
-	});
+		});
 	};
 
-
-	function sendCredentials() {
-
-	//1. Get the Employee login information
-	usrCredentials = uiCtrl.getUserCredentials();
-	console.log(usrCredentials);
-	};
+	sendCredentials = function() {
+		var usrCredentials;
+		
+		//1. Get the Employee login information
+		usrCredentials = uiCtrl.getUserCredentials();
+		console.log(usrCredentials);
+	}	
 
 	return {
 		run: function() {
-			getEventListeners();
+			getEventListeners()
 		}
-	};
+	}	
 
 })(uiController, Bicycle_main);
 
