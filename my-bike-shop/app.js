@@ -15,7 +15,7 @@ var Bicycle_main = (function(username, password) {
 
 
 var uiController = (function() {
-	var domStrings,fetchCredentials;
+	var domStrings,fetchCredentials, clearFields;
 
 	domStrings = {
 		user: '.l_user',
@@ -23,18 +23,44 @@ var uiController = (function() {
 		loginBtn: '.signinBtn'
 	};
 
-	fetchCredentials = {
+	fetchCreds = {
 		username: document.querySelector(domStrings.user).value,
 		password: document.querySelector(domStrings.pass).value
 	};
 
 	return {
 		getUserCredentials: function() {
-			console.log(fetchCredentials.username);
-			;
+
+			if (fetchCreds.username !== '' && fetchCreds.password !== '') {
+				return {
+					usr: fetchCreds.username, pwd: fetch.password
+				};
+
+			} else if (fetchCreds.username === '' && fetchCreds.password !== '') {
+				alert('Please enter your username.');
+			} else if (fetchCreds.username !== '' && fetchCreds.password === '') {
+				alert('Please enter you password.');
+			} else {
+				alert('Please enter your credentials.');
+			}
 		},
 		sendDomStrings: function() {
 			return domStrings;
+		},
+		testPublicAccess: function() {
+			console.log(fetchCreds.username);
+			console.log(fetchCreds.password);
+		},
+		clearFields: function() {
+			var g, clearFields;
+
+			//Clear the Input Fields
+			fields = document.querySelectorAll(domStrings.user + ',' + domStrings.pass);
+			arr = Array.prototype.slice.call(fields);
+			arr.forEach(function(e,i,a) {
+				a[i] = '';
+			});
+		return arr;
 		}
 	}
 })();
@@ -60,6 +86,8 @@ var appController = (function(uiCtrl, bikeMain) {
 		
 		//1. Get the Employee login information
 		usrCredentials = uiCtrl.getUserCredentials();
+		// console.log(usrCredentials);
+		uiCtrl.clearFields();
 		console.log(usrCredentials);
 	}	
 
