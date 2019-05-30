@@ -3,15 +3,18 @@ var Bicycle_main = (function(username, password) {
 
 	this.username = username;
 	this.password = password;
-	this.employeeID = Math.random(0) * 99999;
+	this.employeeID = employeeID;
 
+	empDatabase = function(usr,pwd,id) {
+		var employee;
 
-	empDatabase = { 
-			jmcintyre: {ID: employeeID, password: 'cisco123'}
+		employee = 
+		[
+		{usr:[pwd,id]}
+		]
 	};
-
-	return 5;
 })();
+
 
 
 var uiController = (function() {
@@ -33,7 +36,7 @@ var uiController = (function() {
 
 			if (fetchCreds.username !== '' && fetchCreds.password !== '') {
 				return {
-					usr: fetchCreds.username, pwd: fetch.password
+					usr: fetchCreds.username, pwd: fetchCreds.password
 				};
 
 			} else if (fetchCreds.username === '' && fetchCreds.password !== '') {
@@ -58,7 +61,7 @@ var uiController = (function() {
 			fields = document.querySelectorAll(domStrings.user + ',' + domStrings.pass);
 			arr = Array.prototype.slice.call(fields);
 			arr.forEach(function(e,i,a) {
-				a[i] = '';
+				a[i].value = '';
 			});
 		return arr;
 		}
@@ -82,13 +85,13 @@ var appController = (function(uiCtrl, bikeMain) {
 	};
 
 	sendCredentials = function() {
-		var usrCredentials;
+		var usrCredentials, clearedTest;
 		
 		//1. Get the Employee login information
 		usrCredentials = uiCtrl.getUserCredentials();
-		// console.log(usrCredentials);
 		uiCtrl.clearFields();
 		console.log(usrCredentials);
+		
 	}	
 
 	return {
