@@ -18,7 +18,7 @@ var Bicycle_main = (function(username, password) {
 
 
 var uiController = (function() {
-	var domStrings,fetchCredentials, clearFields;
+	var domStrings,fetchCredentials, clearFields,sendCredsObj;
 
 	domStrings = {
 		user: '.l_user',
@@ -27,32 +27,29 @@ var uiController = (function() {
 	};
 
 	fetchCreds = {
-		username: document.querySelector(domStrings.user).value,
-		password: document.querySelector(domStrings.pass).value
+		usr: document.querySelector(domStrings.user).value,
+		pwd: document.querySelector(domStrings.pass).value
 	};
 
 	return {
 		getUserCredentials: function() {
 
-			if (fetchCreds.username !== '' && fetchCreds.password !== '') {
-				return {
-					usr: fetchCreds.username, pwd: fetchCreds.password
-				};
-
-			} else if (fetchCreds.username === '' && fetchCreds.password !== '') {
-				alert('Please enter your username.');
-			} else if (fetchCreds.username !== '' && fetchCreds.password === '') {
-				alert('Please enter you password.');
-			} else {
-				alert('Please enter your credentials.');
+			document.addEventListener('keypress', function(kpEvent) {
+				if (kpEvent.keyCode === 13 || kpEvent.which === 13) {
+					return fetchCreds;
 			}
+		});
+
 		},
 		sendDomStrings: function() {
 			return domStrings;
 		},
 		testPublicAccess: function() {
-			console.log(fetchCreds.username);
-			console.log(fetchCreds.password);
+			console.log(fetchCreds.usr);
+			console.log(fetchCreds.pwd);
+		},
+		sendCredsObj: function() {
+			return fetchCreds;
 		},
 		clearFields: function() {
 			var g, clearFields;
@@ -70,28 +67,37 @@ var uiController = (function() {
 
 
 var appController = (function(uiCtrl, bikeMain) {
-	var getDoms, getEventListeners,doms,sendCredentials;
+	var getEventListeners,doms,sendCredentials, crds, fieldValues;
 
+	//Fetch DomStrings
 	doms = uiCtrl.sendDomStrings();
 
-	getEventListeners = function(){
-		document.querySelector(doms.loginBtn).addEventListener('click',sendCredentials);
-		document.addEventListener('keypress', function(kpEvent) {
+	//Fetch Input Box Values
+	fieldValues = uiCtrl.sendCredsObj();
 
-			if (kpEvent.keyCode === 13 || kpEvent.which === 13) {
-				sendCredentials();
-			}
-		});
+	getEventListeners = function(){
+
+		// Check Input fields for Value.
+		if (fieldValues.usr !== '' && fieldValues.pwd !== '') {
+			document.querySelector(doms.loginBtn).addEventListener('click',sendCredentials);
+
+			//Get Credentials
+			crds = uiCtrl.getUserCredentials();
+
+			//Send Credentials
+			sendCredentials(crds);
+
+		} else if (fieldValues.usr === '' && fieldValues.pwd !== '') {
+			alert('Please enter your username.');
+		} else if (fieldValues.usr !== '' && fieldValues.pwd === '') {
+			alert('Please enter your password.');
+		} else {
+			alert('Please enter your credentials.');
+		}
 	};
 
-	sendCredentials = function() {
-		var usrCredentials, clearedTest;
-		
-		//1. Get the Employee login information
-		usrCredentials = uiCtrl.getUserCredentials();
-		uiCtrl.clearFields();
-		console.log(usrCredentials);
-		
+	sendCredentials = function(c) {
+		return c;
 	}	
 
 	return {
