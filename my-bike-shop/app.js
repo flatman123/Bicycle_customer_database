@@ -32,15 +32,6 @@ var uiController = (function() {
 	};
 
 	return {
-		getUserCredentials: function() {
-
-			document.addEventListener('keypress', function(kpEvent) {
-				if (kpEvent.keyCode === 13 || kpEvent.which === 13) {
-					return fetchCreds;
-			}
-		});
-
-		},
 		sendDomStrings: function() {
 			return domStrings;
 		},
@@ -71,34 +62,41 @@ var appController = (function(uiCtrl, bikeMain) {
 
 	//Fetch DomStrings
 	doms = uiCtrl.sendDomStrings();
-
 	//Fetch Input Box Values
 	fieldValues = uiCtrl.sendCredsObj();
 
 	getEventListeners = function(){
+		document.querySelector(doms.loginBtn).addEventListener('click',checkCreds);
+		
+		document.addEventListener('keypress', function(e) {
+			if (e.keyCode === 13 || e.which === 13) {
+				checkCreds();
+			}
+		});
 
-		// Check Input fields for Value.
-		if (fieldValues.usr !== '' && fieldValues.pwd !== '') {
-			document.querySelector(doms.loginBtn).addEventListener('click',sendCredentials);
+		// FIX THIS FUNCTION
+		var checkCreds = function() {
+			console.log(fieldValues.usr);
+			console.log(fieldValues.pwd);
 
-			//Get Credentials
-			crds = uiCtrl.getUserCredentials();
+			if (fieldValues.usr !== '' && fieldValues.pwd !== '') {
+				console.log('OK');
+			} else if (fieldValues.usr === '' && fieldValues.pwd !== '') {
+				alert('Please enter your username.');
+			} else if (fieldValues.usr !== '' && fieldValues.pwd === '') {
+				alert('Please enter your password.');
+			} else {
+				alert('Please enter your credentials.');
+			}
+		};
+		uiCtrl.clearFields();
 
-			//Send Credentials
-			sendCredentials(crds);
-
-		} else if (fieldValues.usr === '' && fieldValues.pwd !== '') {
-			alert('Please enter your username.');
-		} else if (fieldValues.usr !== '' && fieldValues.pwd === '') {
-			alert('Please enter your password.');
-		} else {
-			alert('Please enter your credentials.');
-		}
 	};
 
 	sendCredentials = function(c) {
-		return c;
-	}	
+		console.log(fieldValues.usr);
+		console.log(fieldValues.pwd);
+	}
 
 	return {
 		run: function() {
