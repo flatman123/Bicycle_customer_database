@@ -18,17 +18,12 @@ var Bicycle_main = (function(username, password) {
 
 
 var uiController = (function() {
-	var domStrings,fetchCredentials, clearFields,sendCredsObj;
+	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj;
 
 	domStrings = {
 		user: '.l_user',
 		pass: '.l_pass',
-		loginBtn: '.signinBtn'
-	};
-
-	fetchCreds = {
-		usr: document.querySelector(domStrings.user).value,
-		pwd: document.querySelector(domStrings.pass).value
+		loginBtn: '.signBTN'
 	};
 
 	return {
@@ -40,7 +35,10 @@ var uiController = (function() {
 			console.log(fetchCreds.pwd);
 		},
 		sendCredsObj: function() {
-			return fetchCreds;
+			return 	{
+				usr: document.querySelector(domStrings.user).value,
+				pwd: document.querySelector(domStrings.pass).value
+			}
 		},
 		clearFields: function() {
 			var g, clearFields;
@@ -67,35 +65,35 @@ var appController = (function(uiCtrl, bikeMain) {
 
 	getEventListeners = function(){
 		document.querySelector(doms.loginBtn).addEventListener('click',checkCreds);
-		
 		document.addEventListener('keypress', function(e) {
 			if (e.keyCode === 13 || e.which === 13) {
 				checkCreds();
 			}
 		});
-
-		// FIX THIS FUNCTION
-		var checkCreds = function() {
-			console.log(fieldValues.usr);
-			console.log(fieldValues.pwd);
-
-			if (fieldValues.usr !== '' && fieldValues.pwd !== '') {
-				console.log('OK');
-			} else if (fieldValues.usr === '' && fieldValues.pwd !== '') {
-				alert('Please enter your username.');
-			} else if (fieldValues.usr !== '' && fieldValues.pwd === '') {
-				alert('Please enter your password.');
-			} else {
-				alert('Please enter your credentials.');
-			}
-		};
-		uiCtrl.clearFields();
-
 	};
 
-	sendCredentials = function(c) {
-		console.log(fieldValues.usr);
-		console.log(fieldValues.pwd);
+	// FIX THIS FUNCTION
+	var checkCreds = function() {
+		var u,p;
+		u = uiCtrl.sendCredsObj().usr;
+		p = uiCtrl.sendCredsObj().pwd;
+
+		if (u !== '' && p !== '') {
+			sendCredentials(u,p);
+		} else if (u === '' && p !== '') {
+			alert('Please enter your username.');
+		} else if (u !== '' && p === '') {
+			alert('Please enter your password.');
+		} else {
+			alert('Please enter your credentials.');
+		}
+		uiCtrl.clearFields();	
+	};
+
+	sendCredentials = function(usr,pwd) {
+		// Some Code
+		console.log(usr);
+		console.log(pwd);
 	}
 
 	return {
