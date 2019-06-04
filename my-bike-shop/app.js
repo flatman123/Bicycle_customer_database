@@ -1,4 +1,5 @@
 var Bicycle_main = (function(username, password) {
+	"use strict";
 	var employeeID, empDatabase, customerInfo;
 
 	this.username = username;
@@ -10,14 +11,15 @@ var Bicycle_main = (function(username, password) {
 
 		employee = 
 		[
-		{usr:[pwd,id]}
+			{
+				usr:[pwd,id]
+			}
 		]
 	};
 })();
 
-
-
 var uiController = (function() {
+	"use strict";
 	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj;
 
 	domStrings = {
@@ -56,6 +58,7 @@ var uiController = (function() {
 
 
 var appController = (function(uiCtrl, bikeMain) {
+	"use strict";
 	var getEventListeners,doms,sendCredentials, crds, fieldValues;
 
 	//Fetch DomStrings
@@ -64,17 +67,18 @@ var appController = (function(uiCtrl, bikeMain) {
 	fieldValues = uiCtrl.sendCredsObj();
 
 	getEventListeners = function(){
-		document.querySelector(doms.loginBtn).addEventListener('click',checkCreds);
+		
+		document.querySelector(doms.loginBtn).addEventListener('click',verifyCreds);
 		document.addEventListener('keypress', function(e) {
 			if (e.keyCode === 13 || e.which === 13) {
-				checkCreds();
+				verifyCreds();
 			}
 		});
 	};
 
-	// FIX THIS FUNCTION
-	var checkCreds = function() {
+	var verifyCreds = function() {
 		var u,p;
+
 		u = uiCtrl.sendCredsObj().usr;
 		p = uiCtrl.sendCredsObj().pwd;
 
@@ -87,7 +91,11 @@ var appController = (function(uiCtrl, bikeMain) {
 		} else {
 			alert('Please enter your credentials.');
 		}
-		uiCtrl.clearFields();	
+		uiCtrl.clearFields();
+
+		// Verify user credentials in Database	
+
+
 	};
 
 	sendCredentials = function(usr,pwd) {
