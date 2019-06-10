@@ -3,7 +3,7 @@
 	position: relative;
 	top: 200px;
 	margin-left: 120px;
-	/*display: none;*/
+	
 }
 
 
@@ -13,27 +13,42 @@
 	margin-left: 60px;
 	background-color: #37a6f5;
 	border-radius: 6px;
+	display: none;
 }
 
-.user_and_Pass {
+.register_Area {
+	width: 350px;
+	height: 250px;
+	margin-left: 60px;
+	background-color: #FF7E47;
+	border-radius: 6px;
+	/*display: none;*/
+	
+}
+
+.user_and_Pass, .register_User {
 	position: relative;
 	top: 100px;
 	margin-left: 15%;
 }
 
-.sign_in_btn {
+.sign_in_btn, .reg_Btn {
 	position: relative;
 	top: 110px;
 	margin-left: 135px;
 }
 
 
+
+
+/* Customer Login Area */
+
 .customer_container {
 	width: 100%;
 	position: relative;
 	top: 220px;
 	margin-left: 120px;
-	/*display: none;*/
+	display: none;
 }
 
 .customer_data_area {
