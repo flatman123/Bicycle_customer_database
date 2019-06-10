@@ -1,5 +1,5 @@
 var Bicycle_main = (function(username, password) {
-	"use strict";
+	//"use strict";
 	var employeeID, empDatabase, customerInfo;
 
 	this.username = username;
@@ -19,46 +19,58 @@ var Bicycle_main = (function(username, password) {
 })();
 
 var uiController = (function() {
-	"use strict";
+	//"use strict";
 	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj;
 
 	domStrings = {
-		user: '.l_user',
-		pass: '.l_pass',
-		loginBtn: '.signBTN'
+		loginUsr: '.l_user',
+		loginPwd: '.l_pass',
+		loginBtn: '.signBTN',
+		registerBtn: '.registr_Btn',
+		regUsr: '.reg_user',
+		regPwd: '.reg_pass'
 	};
 
 	return {
+
 		sendDomStrings: function() {
 			return domStrings;
 		},
+
 		testPublicAccess: function() {
 			console.log(fetchCreds.usr);
 			console.log(fetchCreds.pwd);
 		},
+
 		sendCredsObj: function() {
 			return 	{
-				usr: document.querySelector(domStrings.user).value,
-				pwd: document.querySelector(domStrings.pass).value
+				usr: document.querySelector(domStrings.regUsr).value,
+				pwd: document.querySelector(domStrings.regPwd).value
 			}
 		},
+
 		clearFields: function() {
 			var g, clearFields;
 
 			//Clear the Input Fields
-			fields = document.querySelectorAll(domStrings.user + ',' + domStrings.pass);
+			fields = document.querySelectorAll(domStrings.regUsr + ',' + domStrings.regPwd);
 			arr = Array.prototype.slice.call(fields);
 			arr.forEach(function(e,i,a) {
 				a[i].value = '';
 			});
-		return arr;
+			return arr;
+		},
+
+		checkCredentials: function(usr,crd) {
+
+			//1. check User credentials in database.
 		}
 	}
 })();
 
 
 var appController = (function(uiCtrl, bikeMain) {
-	"use strict";
+	//"use strict";
 	var getEventListeners,doms,sendCredentials, crds, fieldValues;
 
 	//Fetch DomStrings
@@ -68,22 +80,22 @@ var appController = (function(uiCtrl, bikeMain) {
 
 	getEventListeners = function(){
 		
-		document.querySelector(doms.loginBtn).addEventListener('click',verifyCreds);
+		document.querySelector(doms.registerBtn).addEventListener('click',verifyInput);
 		document.addEventListener('keypress', function(e) {
 			if (e.keyCode === 13 || e.which === 13) {
-				verifyCreds();
+				verifyInput();
 			}
 		});
 	};
 
-	var verifyCreds = function() {
+	var verifyInput = function() {
 		var u,p;
 
 		u = uiCtrl.sendCredsObj().usr;
 		p = uiCtrl.sendCredsObj().pwd;
 
 		if (u !== '' && p !== '') {
-			sendCredentials(u,p);
+			sendUsrCredentials(u,p);
 		} else if (u === '' && p !== '') {
 			alert('Please enter your username.');
 		} else if (u !== '' && p === '') {
@@ -98,10 +110,10 @@ var appController = (function(uiCtrl, bikeMain) {
 
 	};
 
-	sendCredentials = function(usr,pwd) {
+	sendUsrCredentials = function(usr,pwd) {
 		// Some Code
-		console.log(usr);
-		console.log(pwd);
+		//uiCtrl.checkCredentials(usr,pwd);
+
 	}
 
 	return {
