@@ -1,22 +1,42 @@
-var Bicycle_main = (function(username, password) {
+var Main = (function() {
+
+	var createEmployee = function (fname, lname, usr, pwd) {
 	//"use strict";
-	var employeeID, empDatabase, customerInfo;
+		let employeeDatabase = Object.create(createEmployee.prototype);
 
-	this.username = username;
-	this.password = password;
-	this.employeeID = employeeID;
+		employeeDatabase.firstname = fname;
+		employeeDatabase.lastname = lname;
+		employeeDatabase.username = usr;
+		employeeDatabase.password = pwd;
 
-	empDatabase = function(usr,pwd,id) {
-		var employee;
 
-		employee = 
-		[
-			{
-				usr:[pwd,id]
-			}
-		]
-	};
+		createEmployee.prototype.firstname = function(fname) {
+			console.log(`${this.fname} added to Database.`);
+		};
+
+		createEmployee.prototype.lastname = function(lname) {
+			console.log(`${this.lname} added to Database.`);
+		};
+
+		createEmployee.prototype.password = function(pwd) {
+			console.log('Password saved to Database.');
+		};
+
+		createEmployee.prototype.id = function() {
+			const empId = Math.floor(Math.random(1000) * 9999);
+		};
+
+		createEmployee.prototype.username = function(u) {
+			console.log(`Username ${this.u} added to the database`);
+		};
+		return employeeDatabase;
+	}
+	return {
+		createEmployee,
+	}
+	
 })();
+
 
 var uiController = (function() {
 	//"use strict";
@@ -28,7 +48,9 @@ var uiController = (function() {
 		loginBtn: '.signBTN',
 		registerBtn: '.registr_Btn',
 		regUsr: '.reg_user',
-		regPwd: '.reg_pass'
+		regPwd: '.reg_pass',
+		regFname: '.firstname',
+		regLname: '.lastname'
 	};
 
 	return {
@@ -42,12 +64,18 @@ var uiController = (function() {
 			console.log(fetchCreds.pwd);
 		},
 
-		sendCredsObj: function() {
+		sendCreds: function() {
 			return 	{
 				usr: document.querySelector(domStrings.regUsr).value,
-				pwd: document.querySelector(domStrings.regPwd).value
+				pwd: document.querySelector(domStrings.regPwd).value,
+				registerFname: document.querySelector(domStrings.regFname).value,
+				registerLname: document.querySelector(domStrings.regLname).value,
+				registerUser: document.querySelector(domStrings.regUsr).value,
+				registerPwd: document.querySelector(domStrings.regPwd).value
 			}
 		},
+
+		}
 
 		clearFields: function() {
 			var g, clearFields;
@@ -61,32 +89,46 @@ var uiController = (function() {
 			return arr;
 		},
 
-		checkCredentials: function(usr,crd) {
-
-			//1. check User credentials in database.
-		}
 	}
 })();
 
 
-var appController = (function(uiCtrl, bikeMain) {
+var appController = (function(uiCtrl, createEmp) {
 	//"use strict";
-	var getEventListeners,doms,sendCredentials, crds, fieldValues;
+	var getEventListeners, doms, sendCredentials, crds,
+		 fieldValues, firstname, lastname, username, password;
 
 	//Fetch DomStrings
 	doms = uiCtrl.sendDomStrings();
+
 	//Fetch Input Box Values
-	fieldValues = uiCtrl.sendCredsObj();
+	fieldValues = uiCtrl.sendCreds();
+
+	//fetch registration information
+	firstname = doms.regFname;
+	lastname = doms.regLname;
+	username = doms.regUsr;
+	password = doms.regPwd;
 
 	getEventListeners = function(){
 		
-		document.querySelector(doms.registerBtn).addEventListener('click',verifyInput);
+		document.querySelector(doms.registerBtn).addEventListener('click',addNewEmployee);
+
 		document.addEventListener('keypress', function(e) {
 			if (e.keyCode === 13 || e.which === 13) {
-				verifyInput();
+				addNewEmployee();
 			}
 		});
 	};
+
+	var addNewEmployee = function() {
+
+		// Create user account in DataBase
+		let newEmp = createEmp.createEmployee(firstname, lastname, 
+								username, password);
+		console.log(newEmp);
+	}
+
 
 	var verifyInput = function() {
 		var u,p;
@@ -106,8 +148,6 @@ var appController = (function(uiCtrl, bikeMain) {
 		uiCtrl.clearFields();
 
 		// Verify user credentials in Database	
-
-
 	};
 
 	sendUsrCredentials = function(usr,pwd) {
@@ -122,6 +162,42 @@ var appController = (function(uiCtrl, bikeMain) {
 		}
 	}	
 
-})(uiController, Bicycle_main);
+})(uiController, Main);
 
 appController.run();
+
+
+
+
+// var CreateEmployee = (function(fname, lname, usr, pwd) {
+// 	//"use strict";
+// 	let employeeDatabase = Object.create(CreateEmployee.prototype);
+
+// 	employeeDatabase.firstname = fname;
+// 	employeeDatabase.lastname = lname;
+// 	employeeDatabase.username = usr;
+// 	employeeDatabase.password = pwd;
+
+
+// 	CreateEmployee.prototype.firstname = function(fname) {
+// 		console.log(`${this.fname} added to Database.`);
+// 	};
+
+// 	CreateEmployee.prototype.lastname = function(lname) {
+// 		console.log(`${this.lname} added to Database.`);
+// 	};
+
+// 	CreateEmployee.prototype.password = function(pwd) {
+// 		console.log('Password saved to Database.');
+// 	};
+
+// 	CreateEmployee.prototype.id = function() {
+// 		const empId = Math.floor(Math.random(1000) * 9999);
+// 	};
+
+// 	CreateEmployee.prototype.username = function(u) {
+// 		console.log(`Username ${this.u} added to the database`);
+// 	};
+
+// 	return employeeDatabase;
+// })();
