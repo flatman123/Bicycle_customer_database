@@ -32,7 +32,19 @@
 	margin-left: 15%;
 }
 
-.sign_in_btn, .reg_Btn {
+.register_User {
+	position: relative;
+	top: 50px;
+	margin-left: 15%;
+}
+
+.reg_Btn {
+position: relative;
+top: 80px;
+margin-left: 35%;
+ }
+
+.sign_in_btn,  {
 	position: relative;
 	top: 110px;
 	margin-left: 135px;
