@@ -1,8 +1,8 @@
-var Main = (function() {
+var main = (function() {
 
-	var createEmployee = function (f,l,u,p) {
+	var CreateEmployee = function (f,l,u,p) {
 	//"use strict";
-		let employeeDatabase = Object.create(createEmployee.prototype);
+		let employeeDatabase = Object.create(CreateEmployee.prototype);
 
 		employeeDatabase.firstname = f;
 		employeeDatabase.lastname = l;
@@ -10,43 +10,37 @@ var Main = (function() {
 		employeeDatabase.password = p;
 
 
-		createEmployee.prototype.firstname = function(f) {
+		CreateEmployee.prototype.firstname = function(f) {
 			console.log(`${this.fname} added to Database.`);
 		};
 
-		createEmployee.prototype.lastname = function(l) {
+		CreateEmployee.prototype.lastname = function(l) {
 			console.log(`${this.lname} added to Database.`);
 		};
 
-		createEmployee.prototype.password = function(p) {
+		CreateEmployee.prototype.password = function(p) {
 			console.log('Password saved to Database.');
 		};
 
-		createEmployee.prototype.id = function() {
+		CreateEmployee.prototype.id = function() {
 			const empId = Math.floor(Math.random(1000) * 9999);
 		};
 
-		createEmployee.prototype.username = function(u) {
+		CreateEmployee.prototype.username = function(u) {
 			console.log(`Username ${this.u} added to the database`);
 		};
-
-		if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
-			return employeeDatabase;
-		} else {
-			deleteProperties(employeeDatabase);
-			alert('Please Fill out all fields.');
-		}
+		return employeeDatabase;
 	}
 
-	var deleteProperties = function(o) {
+	return {
+		CreateEmployee,
+
+		deleteProperties:function(o) {
 		for (const value in o) {
 			Reflect.deleteProperty(o,`${value}`);
 		}
 		return o;
-	}
-
-	return {
-		createEmployee,
+		},
 	}
 	
 })();
@@ -54,7 +48,7 @@ var Main = (function() {
 
 var uiController = (function() {
 	//"use strict";
-	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj;
+	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj, nodeListForEach;
 
 	domStrings = {
 		loginUsr: '.l_user',
@@ -64,18 +58,22 @@ var uiController = (function() {
 		regUsr: '.reg_user',
 		regPwd: '.reg_pass',
 		regFname: '.firstname',
-		regLname: '.lastname'
+		regLname: '.lastname',
+		displayLogin: '#login1',
+		displayRegister: '#register2',
+		displayCustomer: '#customer3'
+	};
+
+	nodeListForEach = function(o, callback) {
+		for (var i = 0; i < o.length; i++) {
+			callback(o[i], i);;
+		}
 	};
 
 	return {
 
 		sendDomStrings: function() {
 			return domStrings;
-		},
-
-		testPublicAccess: function() {
-			console.log(fetchCreds.usr);
-			console.log(fetchCreds.pwd);
 		},
 
 		sendCreds: function() {
@@ -105,6 +103,24 @@ var uiController = (function() {
 			return arr;
 		},
 
+		splashScreenCtrl: function(e){
+			// some code here
+		},
+
+		invalidEntry: function(o) {
+			var fields = document.querySelectorAll(
+				domStrings.loginUsr + ',' +
+				domStrings.loginPwd + ',' +
+				domStrings.regUsr + ',' +
+				domStrings.regPwd + ',' +
+				domStrings.regFname + ',' +
+				domStrings.regLname);
+
+			nodeListForEach(fields, function(current) {
+				current.classList.toggle('invalidEntry');
+			});
+
+		},
 	}
 })();
 
@@ -118,7 +134,6 @@ var appController = (function(uiCtrl, createEmp) {
 	doms = uiCtrl.sendDomStrings();
 
 	getEventListeners = function(){
-		uiCtrl.clearFields();
 		document.querySelector(doms.registerBtn).addEventListener('click',addNewEmployee);
 
 		document.addEventListener('keypress', function(e) {
@@ -129,7 +144,7 @@ var appController = (function(uiCtrl, createEmp) {
 	};
 
 	var addNewEmployee = function() {
-		var f,l,u,p,newEmp;
+		var f,l,u,p,newEmp, invalid;
 
 		//Fetch Input Box Values
 	 	f = uiCtrl.sendCreds().registerFname;
@@ -137,11 +152,29 @@ var appController = (function(uiCtrl, createEmp) {
 	 	u = uiCtrl.sendCreds().registerUser;
 	 	p = uiCtrl.sendCreds().registerPwd;
 
-		newEmp = createEmp.createEmployee(f,l,u,p);
-		console.log(newEmp);
-		uiCtrl.clearFields();	
-	}
+	 	invalid = doms.loginUsr + ',' +
+				doms.loginPwd + ',' +
+				doms.loginBtn + ',' +
+				doms.regUsr + ',' +
+				doms.regPwd + ',' +
+				doms.regFname + ',' +
+				doms.regLname + ',';
 
+	 	if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
+	 		// Add to user Database
+			newEmp = createEmp.CreateEmployee(f,l,u,p);
+		} else {
+			createEmp.deleteProperties();
+
+			//FIX CHANGE EVENT
+			document.querySelector(doms.regFname).addEventListener('change',uiCtrl.invalidEntry);
+			alert('Please Fill out all fields.');
+		}
+		uiCtrl.clearFields();
+
+		//Display login screen
+
+	}
 
 	var verifyInput = function() {
 		var u,p;
@@ -171,10 +204,11 @@ var appController = (function(uiCtrl, createEmp) {
 
 	return {
 		run: function() {
+			uiCtrl.clearFields();
 			getEventListeners()
 		}
 	}	
 
-})(uiController, Main);
+})(uiController, main);
 
 appController.run();
