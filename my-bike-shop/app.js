@@ -1,24 +1,24 @@
 var Main = (function() {
 
-	var createEmployee = function (fname, lname, usr, pwd) {
+	var createEmployee = function (f,l,u,p) {
 	//"use strict";
 		let employeeDatabase = Object.create(createEmployee.prototype);
 
-		employeeDatabase.firstname = fname;
-		employeeDatabase.lastname = lname;
-		employeeDatabase.username = usr;
-		employeeDatabase.password = pwd;
+		employeeDatabase.firstname = f;
+		employeeDatabase.lastname = l;
+		employeeDatabase.username = u;
+		employeeDatabase.password = p;
 
 
-		createEmployee.prototype.firstname = function(fname) {
+		createEmployee.prototype.firstname = function(f) {
 			console.log(`${this.fname} added to Database.`);
 		};
 
-		createEmployee.prototype.lastname = function(lname) {
+		createEmployee.prototype.lastname = function(l) {
 			console.log(`${this.lname} added to Database.`);
 		};
 
-		createEmployee.prototype.password = function(pwd) {
+		createEmployee.prototype.password = function(p) {
 			console.log('Password saved to Database.');
 		};
 
@@ -29,8 +29,22 @@ var Main = (function() {
 		createEmployee.prototype.username = function(u) {
 			console.log(`Username ${this.u} added to the database`);
 		};
-		return employeeDatabase;
+
+		if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
+			return employeeDatabase;
+		} else {
+			deleteProperties(employeeDatabase);
+			alert('Please Fill out all fields.');
+		}
 	}
+
+	var deleteProperties = function(o) {
+		for (const value in o) {
+			Reflect.deleteProperty(o,`${value}`);
+		}
+		return o;
+	}
+
 	return {
 		createEmployee,
 	}
@@ -66,8 +80,8 @@ var uiController = (function() {
 
 		sendCreds: function() {
 			return 	{
-				usr: document.querySelector(domStrings.regUsr).value,
-				pwd: document.querySelector(domStrings.regPwd).value,
+				lginUsr: document.querySelector(domStrings.loginUsr).value,
+				lginpwd: document.querySelector(domStrings.loginPwd).value,
 				registerFname: document.querySelector(domStrings.regFname).value,
 				registerLname: document.querySelector(domStrings.regLname).value,
 				registerUser: document.querySelector(domStrings.regUsr).value,
@@ -75,13 +89,15 @@ var uiController = (function() {
 			}
 		},
 
-		}
-
 		clearFields: function() {
 			var g, clearFields;
 
 			//Clear the Input Fields
-			fields = document.querySelectorAll(domStrings.regUsr + ',' + domStrings.regPwd);
+			fields = document.querySelectorAll(domStrings.regUsr + ','
+					 + domStrings.regPwd + ',' 
+					 + domStrings.regFname + ','
+					 + domStrings.regLname + ','
+					 + domStrings.regUsr);
 			arr = Array.prototype.slice.call(fields);
 			arr.forEach(function(e,i,a) {
 				a[i].value = '';
@@ -96,22 +112,13 @@ var uiController = (function() {
 var appController = (function(uiCtrl, createEmp) {
 	//"use strict";
 	var getEventListeners, doms, sendCredentials, crds,
-		 fieldValues, firstname, lastname, username, password;
+		 registrationInfo, f,l,u,p;
 
 	//Fetch DomStrings
 	doms = uiCtrl.sendDomStrings();
 
-	//Fetch Input Box Values
-	fieldValues = uiCtrl.sendCreds();
-
-	//fetch registration information
-	firstname = doms.regFname;
-	lastname = doms.regLname;
-	username = doms.regUsr;
-	password = doms.regPwd;
-
 	getEventListeners = function(){
-		
+		uiCtrl.clearFields();
 		document.querySelector(doms.registerBtn).addEventListener('click',addNewEmployee);
 
 		document.addEventListener('keypress', function(e) {
@@ -122,19 +129,25 @@ var appController = (function(uiCtrl, createEmp) {
 	};
 
 	var addNewEmployee = function() {
+		var f,l,u,p,newEmp;
 
-		// Create user account in DataBase
-		let newEmp = createEmp.createEmployee(firstname, lastname, 
-								username, password);
+		//Fetch Input Box Values
+	 	f = uiCtrl.sendCreds().registerFname;
+	 	l = uiCtrl.sendCreds().registerLname;
+	 	u = uiCtrl.sendCreds().registerUser;
+	 	p = uiCtrl.sendCreds().registerPwd;
+
+		newEmp = createEmp.createEmployee(f,l,u,p);
 		console.log(newEmp);
+		uiCtrl.clearFields();	
 	}
 
 
 	var verifyInput = function() {
 		var u,p;
 
-		u = uiCtrl.sendCredsObj().usr;
-		p = uiCtrl.sendCredsObj().pwd;
+		u = uiCtrl.sendCreds().lginUsr;
+		p = uiCtrl.sendCreds().lginPwd;
 
 		if (u !== '' && p !== '') {
 			sendUsrCredentials(u,p);
@@ -165,39 +178,3 @@ var appController = (function(uiCtrl, createEmp) {
 })(uiController, Main);
 
 appController.run();
-
-
-
-
-// var CreateEmployee = (function(fname, lname, usr, pwd) {
-// 	//"use strict";
-// 	let employeeDatabase = Object.create(CreateEmployee.prototype);
-
-// 	employeeDatabase.firstname = fname;
-// 	employeeDatabase.lastname = lname;
-// 	employeeDatabase.username = usr;
-// 	employeeDatabase.password = pwd;
-
-
-// 	CreateEmployee.prototype.firstname = function(fname) {
-// 		console.log(`${this.fname} added to Database.`);
-// 	};
-
-// 	CreateEmployee.prototype.lastname = function(lname) {
-// 		console.log(`${this.lname} added to Database.`);
-// 	};
-
-// 	CreateEmployee.prototype.password = function(pwd) {
-// 		console.log('Password saved to Database.');
-// 	};
-
-// 	CreateEmployee.prototype.id = function() {
-// 		const empId = Math.floor(Math.random(1000) * 9999);
-// 	};
-
-// 	CreateEmployee.prototype.username = function(u) {
-// 		console.log(`Username ${this.u} added to the database`);
-// 	};
-
-// 	return employeeDatabase;
-// })();
