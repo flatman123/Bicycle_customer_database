@@ -20,7 +20,7 @@
 	width: 350px;
 	height: 250px;
 	margin-left: 60px;
-	background-color: #FF7E47;
+	background-color: #24C0EB;
 	border-radius: 6px;
 	/*display: none;*/
 	
@@ -51,6 +51,17 @@ margin-left: 35%;
 }
 
 
+.firstname, .lastname, .reg_user, .reg_pass{
+border: 2px solid #03E9C3;
+border-radius: 5px;
+margin: 3px 3px;
+}
+
+.invalidEntry:focus {
+border: 1px solid #F33535;
+border-radius: 5px;
+margin: 3px 3px;
+}
 
 
 /* Customer Login Area */
