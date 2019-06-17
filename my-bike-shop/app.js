@@ -29,18 +29,41 @@ var main = (function() {
 		CreateEmployee.prototype.username = function(u) {
 			console.log(`Username ${this.u} added to the database`);
 		};
+
+		
+		if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
+	 		// Add to user Database
+			return employeeDatabase;
+		} else {
+			returnEmptyFields(employeeDatabase);
+			deleteEmptyProperties(employeeDatabase);
+			alert('Please Fill out all fields.');
+		}
 		return employeeDatabase;
 	}
 
+	//FIX THIS CODE
+	// var returnEmptyFields = function(o) {
+	// 	var emptyFields = [];
+		
+	// 	for (const value in o) {
+	// 		if (`${o[value]}` !== '') {
+	// 			emptyFields.push(`${value}`);
+	// 		};			
+	// 	};
+	// 	return emptyFields;
+	// };
+
+	// var deleteEmptyProperties = function(o) {
+	// 	for (const value in o) {
+	// 		Reflect.deleteProperty(o,`${value}`);
+	// 	}
+	// 	return o;
+	// };
+
 	return {
 		CreateEmployee,
-
-		deleteProperties:function(o) {
-		for (const value in o) {
-			Reflect.deleteProperty(o,`${value}`);
-		}
-		return o;
-		},
+		returnEmptyFields
 	}
 	
 })();
@@ -107,7 +130,7 @@ var uiController = (function() {
 			// some code here
 		},
 
-		invalidEntry: function(o) {
+		invalidEntry: function() {
 			var fields = document.querySelectorAll(
 				domStrings.loginUsr + ',' +
 				domStrings.loginPwd + ',' +
@@ -116,10 +139,11 @@ var uiController = (function() {
 				domStrings.regFname + ',' +
 				domStrings.regLname);
 
+			// document.addEventListener('change',invalidEntry);
+
 			nodeListForEach(fields, function(current) {
 				current.classList.toggle('invalidEntry');
 			});
-
 		},
 	}
 })();
@@ -144,7 +168,7 @@ var appController = (function(uiCtrl, createEmp) {
 	};
 
 	var addNewEmployee = function() {
-		var f,l,u,p,newEmp, invalid;
+		var f,l,u,p,newEmp, userEntries, emptyFields;
 
 		//Fetch Input Box Values
 	 	f = uiCtrl.sendCreds().registerFname;
@@ -152,24 +176,9 @@ var appController = (function(uiCtrl, createEmp) {
 	 	u = uiCtrl.sendCreds().registerUser;
 	 	p = uiCtrl.sendCreds().registerPwd;
 
-	 	invalid = doms.loginUsr + ',' +
-				doms.loginPwd + ',' +
-				doms.loginBtn + ',' +
-				doms.regUsr + ',' +
-				doms.regPwd + ',' +
-				doms.regFname + ',' +
-				doms.regLname + ',';
+	 	newEmp = createEmp.CreateEmployee(f,l,u,p);
+	 	console.log(newEmp);
 
-	 	if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
-	 		// Add to user Database
-			newEmp = createEmp.CreateEmployee(f,l,u,p);
-		} else {
-			createEmp.deleteProperties();
-
-			//FIX CHANGE EVENT
-			document.querySelector(doms.regFname).addEventListener('change',uiCtrl.invalidEntry);
-			alert('Please Fill out all fields.');
-		}
 		uiCtrl.clearFields();
 
 		//Display login screen
