@@ -57,7 +57,7 @@ border-radius: 5px;
 margin: 3px 3px;
 }
 
-.invalidEntry:focus {
+.red_invalid_Entry {
 border: 1px solid #F33535;
 border-radius: 5px;
 }
