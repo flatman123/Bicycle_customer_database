@@ -29,41 +29,43 @@ var main = (function() {
 		CreateEmployee.prototype.username = function(u) {
 			console.log(`Username ${this.u} added to the database`);
 		};
-
 		
 		if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
 	 		// Add to user Database
 			return employeeDatabase;
 		} else {
-			returnEmptyFields(employeeDatabase);
-			deleteEmptyProperties(employeeDatabase);
 			alert('Please Fill out all fields.');
+			return returnEmptyFields(employeeDatabase);
+			
 		}
 		return employeeDatabase;
 	}
 
-	//FIX THIS CODE
-	// var returnEmptyFields = function(o) {
-	// 	var emptyFields = [];
+	var returnEmptyFields = function(obj) {
+		var emptyFields;
+		emptyFields = [];
 		
-	// 	for (const value in o) {
-	// 		if (`${o[value]}` !== '') {
-	// 			emptyFields.push(`${value}`);
-	// 		};			
-	// 	};
-	// 	return emptyFields;
-	// };
+		for (const key in obj) {
+			if (`${obj[key]}` === '') {
+				emptyFields.push(`${key}`);
+			};			
+		};
+		emptyFields.push(true);
+		return emptyFields;
+	};
 
-	// var deleteEmptyProperties = function(o) {
-	// 	for (const value in o) {
-	// 		Reflect.deleteProperty(o,`${value}`);
-	// 	}
-	// 	return o;
-	// };
+
 
 	return {
 		CreateEmployee,
-		returnEmptyFields
+
+		deleteEmptyProperties: function(obj) {
+		for (const key in obj) {
+			Reflect.deleteProperty(obj,`${key}`);
+		}
+		return obj;
+		},
+		
 	}
 	
 })();
@@ -89,8 +91,15 @@ var uiController = (function() {
 
 	nodeListForEach = function(o, callback) {
 		for (var i = 0; i < o.length; i++) {
-			callback(o[i], i);;
+			callback(o[i], i);
 		}
+	};
+
+
+	toggleDom = function(fields) {
+			nodeListForEach(fields, function(current) {
+				current.classList.toggle('red_invalid_Entry');
+			});
 	};
 
 	return {
@@ -125,25 +134,24 @@ var uiController = (function() {
 			});
 			return arr;
 		},
+	
+		  
 
-		splashScreenCtrl: function(e){
-			// some code here
-		},
+		invalidEntry: function(emptyFields) {
+			var dom, fields;
 
-		invalidEntry: function() {
-			var fields = document.querySelectorAll(
-				domStrings.loginUsr + ',' +
-				domStrings.loginPwd + ',' +
-				domStrings.regUsr + ',' +
-				domStrings.regPwd + ',' +
-				domStrings.regFname + ',' +
-				domStrings.regLname);
-
-			// document.addEventListener('change',invalidEntry);
-
-			nodeListForEach(fields, function(current) {
-				current.classList.toggle('invalidEntry');
+			dom = '';
+			emptyFields.forEach(function(e,i,a) {
+				dom += '.' + a[i] + ',';
 			});
+
+			dom = dom.slice(0, dom.length -1);
+
+			fields = document.querySelectorAll(dom);
+			toggleDom(fields);
+			//document.addEventListener('change',invalidEntry);
+
+
 		},
 	}
 })();
@@ -168,7 +176,7 @@ var appController = (function(uiCtrl, createEmp) {
 	};
 
 	var addNewEmployee = function() {
-		var f,l,u,p,newEmp, userEntries, emptyFields;
+		var f,l,u,p,newEmp, userEntries, emptyFields, valid;
 
 		//Fetch Input Box Values
 	 	f = uiCtrl.sendCreds().registerFname;
@@ -176,8 +184,21 @@ var appController = (function(uiCtrl, createEmp) {
 	 	u = uiCtrl.sendCreds().registerUser;
 	 	p = uiCtrl.sendCreds().registerPwd;
 
+
+	 	
 	 	newEmp = createEmp.CreateEmployee(f,l,u,p);
-	 	console.log(newEmp);
+
+	 	if (newEmp[newEmp.length - 1] === true) {
+
+	 		newEmp.pop();
+	 		uiCtrl.invalidEntry(newEmp);
+	 		console.log(newEmp, 'not valid we have some empty fields');
+	 	} else{
+	 		console.log('all good');
+	 		uiCtrl.invalidEntry(newEmp);
+	 	}
+
+	 	
 
 		uiCtrl.clearFields();
 
