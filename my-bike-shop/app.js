@@ -1,50 +1,46 @@
 var main = (function() {
+	function _EmployeeCreator(f,l,u,p) {
+		var employee = Object.create(_EmployeeCreator.prototype);
 
-	var CreateEmployee = function (f,l,u,p) {
-	//"use strict";
-		let employeeDatabase = Object.create(CreateEmployee.prototype);
+		employee.firstname = f;
+		employee.lastname = l;
+		employee.regUsr = u;
+		employee.regPwd = p;
 
-		employeeDatabase.firstname = f;
-		employeeDatabase.lastname = l;
-		employeeDatabase.username = u;
-		employeeDatabase.password = p;
+		if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
+			return employee;
+		} else {
+			alert('Please Fill out all fields.');
+			return _returnEmptyFields(employee);
+		}
 
-
-		CreateEmployee.prototype.firstname = function(f) {
-			console.log(`${this.fname} added to Database.`);
+		_EmployeeCreator.prototype.firstname = function() {
+			console.log(`${this.firstname} added to Database.`);
 		};
 
-		CreateEmployee.prototype.lastname = function(l) {
-			console.log(`${this.lname} added to Database.`);
+		_EmployeeCreator.prototype.lastname = function() {
+			console.log(`${this.lastname} added to Database.`);
 		};
 
-		CreateEmployee.prototype.password = function(p) {
+		_EmployeeCreator.prototype.password = function() {
 			console.log('Password saved to Database.');
 		};
 
-		CreateEmployee.prototype.id = function() {
-			const empId = Math.floor(Math.random(1000) * 9999);
+		_EmployeeCreator.prototype.id = function() {
+			this.id = Math.floor(Math.random(1000) * 9999);
 		};
 
-		CreateEmployee.prototype.username = function(u) {
+		_EmployeeCreator.prototype.username = function(u) {
 			console.log(`Username ${this.u} added to the database`);
 		};
-		
-		if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
-	 		// Add to user Database
-			return employeeDatabase;
-		} else {
-			alert('Please Fill out all fields.');
-			return returnEmptyFields(employeeDatabase);
-			
-		}
-		return employeeDatabase;
+
+		return employee
 	}
 
-	var returnEmptyFields = function(obj) {
+	var _returnEmptyFields = function(obj) {
 		var emptyFields;
 		emptyFields = [];
-		
+
 		for (const key in obj) {
 			if (`${obj[key]}` === '') {
 				emptyFields.push(`${key}`);
@@ -54,10 +50,12 @@ var main = (function() {
 		return emptyFields;
 	};
 
-
+	var _testPrintEmpDatabase = function(){
+		console.log(employeeCreator);
+	};
 
 	return {
-		CreateEmployee,
+		_EmployeeCreator,
 
 		deleteEmptyProperties: function(obj) {
 		for (const key in obj) {
@@ -65,7 +63,11 @@ var main = (function() {
 		}
 		return obj;
 		},
-		
+
+		credHanlder: function (f,l,u,p) {
+			var u = _EmployeeCreator(f,l,u,p);
+			return u;
+		},
 	}
 	
 })();
@@ -73,15 +75,15 @@ var main = (function() {
 
 var uiController = (function() {
 	//"use strict";
-	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj, nodeListForEach;
+	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj, _nodeListForEach;
 
 	domStrings = {
 		loginUsr: '.l_user',
 		loginPwd: '.l_pass',
 		loginBtn: '.signBTN',
 		registerBtn: '.registr_Btn',
-		regUsr: '.reg_user',
-		regPwd: '.reg_pass',
+		regUsr: '.regUsr',
+		regPwd: '.regPwd',
 		regFname: '.firstname',
 		regLname: '.lastname',
 		displayLogin: '#login1',
@@ -89,15 +91,15 @@ var uiController = (function() {
 		displayCustomer: '#customer3'
 	};
 
-	nodeListForEach = function(o, callback) {
+	_nodeListForEach = function(o, callback) {
 		for (var i = 0; i < o.length; i++) {
 			callback(o[i], i);
 		}
 	};
 
 
-	toggleDom = function(fields) {
-			nodeListForEach(fields, function(current) {
+	_toggleDom = function(fields) {
+			_nodeListForEach(fields, function(current) {
 				current.classList.toggle('red_invalid_Entry');
 			});
 	};
@@ -134,24 +136,20 @@ var uiController = (function() {
 			});
 			return arr;
 		},
-	
-		  
 
 		invalidEntry: function(emptyFields) {
 			var dom, fields;
 
+			// Create string for querySelectorAll
 			dom = '';
 			emptyFields.forEach(function(e,i,a) {
 				dom += '.' + a[i] + ',';
 			});
 
-			dom = dom.slice(0, dom.length -1);
-
+			//Modify dom string for querySelectorAll
+			dom = dom.slice(0, dom.length - 1);
 			fields = document.querySelectorAll(dom);
-			toggleDom(fields);
-			//document.addEventListener('change',invalidEntry);
-
-
+			_toggleDom(fields);
 		},
 	}
 })();
@@ -159,24 +157,24 @@ var uiController = (function() {
 
 var appController = (function(uiCtrl, createEmp) {
 	//"use strict";
-	var getEventListeners, doms, sendCredentials, crds,
+	var getEventListeners, doms,crds,
 		 registrationInfo, f,l,u,p;
 
 	//Fetch DomStrings
 	doms = uiCtrl.sendDomStrings();
 
-	getEventListeners = function(){
-		document.querySelector(doms.registerBtn).addEventListener('click',addNewEmployee);
+	_getEventListeners = function(){
+		document.querySelector(doms.registerBtn).addEventListener('click',_addNewEmployee);
 
 		document.addEventListener('keypress', function(e) {
 			if (e.keyCode === 13 || e.which === 13) {
-				addNewEmployee();
+				_addNewEmployee();
 			}
 		});
 	};
 
-	var addNewEmployee = function() {
-		var f,l,u,p,newEmp, userEntries, emptyFields, valid;
+	var _addNewEmployee = function() {
+		var f, l, u, p, newEmp, userEntries, emptyFields;
 
 		//Fetch Input Box Values
 	 	f = uiCtrl.sendCreds().registerFname;
@@ -184,29 +182,28 @@ var appController = (function(uiCtrl, createEmp) {
 	 	u = uiCtrl.sendCreds().registerUser;
 	 	p = uiCtrl.sendCreds().registerPwd;
 
-
-	 	
-	 	newEmp = createEmp.CreateEmployee(f,l,u,p);
+ 	 	newEmp = createEmp.credHanlder(f,l,u,p);
 
 	 	if (newEmp[newEmp.length - 1] === true) {
-
 	 		newEmp.pop();
-	 		uiCtrl.invalidEntry(newEmp);
-	 		console.log(newEmp, 'not valid we have some empty fields');
+
+	 		//HighLight the missing Fields
+	 		uiCtrl.invalidEntry(newEmp);	 		
 	 	} else{
-	 		console.log('all good');
-	 		uiCtrl.invalidEntry(newEmp);
+	 		console.log(newEmp);
+	 				
+	 		//Send credentials
+	 		//userLogin(newEmp);
+	 		uiCtrl.clearFields();
 	 	}
+ 	
+	};
 
-	 	
-
-		uiCtrl.clearFields();
-
-		//Display login screen
-
+	var userLogin = function(credentials) {
+		//
 	}
 
-	var verifyInput = function() {
+	var _verifyInput = function() {
 		var u,p;
 
 		u = uiCtrl.sendCreds().lginUsr;
@@ -226,16 +223,10 @@ var appController = (function(uiCtrl, createEmp) {
 		// Verify user credentials in Database	
 	};
 
-	sendUsrCredentials = function(usr,pwd) {
-		// Some Code
-		//uiCtrl.checkCredentials(usr,pwd);
-
-	}
-
 	return {
 		run: function() {
 			uiCtrl.clearFields();
-			getEventListeners()
+			_getEventListeners()
 		}
 	}	
 
