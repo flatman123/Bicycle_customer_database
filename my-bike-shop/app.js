@@ -14,28 +14,28 @@ var main = (function() {
 			return _returnEmptyFields(employee);
 		}
 
-		_EmployeeCreator.prototype.firstname = function() {
-			console.log(`${this.firstname} added to Database.`);
-		};
-
-		_EmployeeCreator.prototype.lastname = function() {
-			console.log(`${this.lastname} added to Database.`);
-		};
-
-		_EmployeeCreator.prototype.password = function() {
-			console.log('Password saved to Database.');
-		};
-
 		_EmployeeCreator.prototype.id = function() {
-			this.id = Math.floor(Math.random(1000) * 9999);
+			console.log(Math.floor(Math.random(1000) * 9999));
 		};
 
-		_EmployeeCreator.prototype.username = function(u) {
-			console.log(`Username ${this.u} added to the database`);
-		};
+		// _EmployeeCreator.prototype.firstname = function() {
+		// 	console.log(`${this.firstname} added to Database.`);
+		// };
 
-		return employee
-	}
+		// _EmployeeCreator.prototype.lastname = function() {
+		// 	console.log(`${this.lastname} added to Database.`);
+		// };
+
+		// _EmployeeCreator.prototype.password = function() {
+		// 	console.log('Password saved to Database.');
+		// };
+
+		// _EmployeeCreator.prototype.username = function(u) {
+		// 	console.log(`Username ${this.u} added to the database`);
+		// };
+
+		return employee;
+	};
 
 	var _returnEmptyFields = function(obj) {
 		var emptyFields;
@@ -105,7 +105,6 @@ var uiController = (function() {
 	};
 
 	return {
-
 		sendDomStrings: function() {
 			return domStrings;
 		},
@@ -196,12 +195,7 @@ var appController = (function(uiCtrl, createEmp) {
 	 		//userLogin(newEmp);
 	 		uiCtrl.clearFields();
 	 	}
- 	
 	};
-
-	var userLogin = function(credentials) {
-		//
-	}
 
 	var _verifyInput = function() {
 		var u,p;
