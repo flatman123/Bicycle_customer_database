@@ -1,6 +1,6 @@
-var main = (function() {
+const main = (function() {
 	function _EmployeeCreator(f,l,u,p) {
-		var employee = Object.create(_EmployeeCreator.prototype);
+		const employee = Object.create(_EmployeeCreator.prototype);
 
 		employee.firstname = f;
 		employee.lastname = l;
@@ -37,9 +37,8 @@ var main = (function() {
 		return employee;
 	};
 
-	var _returnEmptyFields = function(obj) {
-		var emptyFields;
-		emptyFields = [];
+	const _returnEmptyFields = function(obj) {
+		const emptyFields = [];
 
 		for (const key in obj) {
 			if (`${obj[key]}` === '') {
@@ -50,7 +49,7 @@ var main = (function() {
 		return emptyFields;
 	};
 
-	var _testPrintEmpDatabase = function(){
+	const _testPrintEmpDatabase = function(){
 		console.log(employeeCreator);
 	};
 
@@ -65,7 +64,7 @@ var main = (function() {
 		},
 
 		credHanlder: function (f,l,u,p) {
-			var u = _EmployeeCreator(f,l,u,p);
+			u = _EmployeeCreator(f,l,u,p);
 			return u;
 		},
 	}
@@ -73,9 +72,9 @@ var main = (function() {
 })();
 
 
-var uiController = (function() {
+const uiController = (function() {
 	//"use strict";
-	var domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj, _nodeListForEach;
+	let domStrings,fetchCredentials,fetchCreds,clearFields,sendCredsObj, _nodeListForEach;
 
 	domStrings = {
 		loginUsr: '.l_user',
@@ -121,7 +120,7 @@ var uiController = (function() {
 		},
 
 		clearFields: function() {
-			var g, clearFields;
+			let g, clearFields;
 
 			//Clear the Input Fields
 			fields = document.querySelectorAll(domStrings.regUsr + ','
@@ -137,7 +136,7 @@ var uiController = (function() {
 		},
 
 		invalidEntry: function(emptyFields) {
-			var dom, fields;
+			let dom, fields;
 
 			// Create string for querySelectorAll
 			dom = '';
@@ -154,9 +153,9 @@ var uiController = (function() {
 })();
 
 
-var appController = (function(uiCtrl, createEmp) {
+const appController = (function(uiCtrl, createEmp) {
 	//"use strict";
-	var getEventListeners, doms,crds,
+	let getEventListeners, doms,crds,
 		 registrationInfo, f,l,u,p;
 
 	//Fetch DomStrings
@@ -172,8 +171,8 @@ var appController = (function(uiCtrl, createEmp) {
 		});
 	};
 
-	var _addNewEmployee = function() {
-		var f, l, u, p, newEmp, userEntries, emptyFields;
+	const _addNewEmployee = function() {
+		let f, l, u, p, newEmp, userEntries, emptyFields;
 
 		//Fetch Input Box Values
 	 	f = uiCtrl.sendCreds().registerFname;
@@ -197,8 +196,8 @@ var appController = (function(uiCtrl, createEmp) {
 	 	}
 	};
 
-	var _verifyInput = function() {
-		var u,p;
+	const _verifyInput = function() {
+		let u,p;
 
 		u = uiCtrl.sendCreds().lginUsr;
 		p = uiCtrl.sendCreds().lginPwd;
