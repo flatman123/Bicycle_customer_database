@@ -8,42 +8,47 @@ const main = (function() {
 		employee.regPwd = p;
 
 		if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
+			employee.id();
 			return employee;
 		} else {
 			alert('Please Fill out all fields.');
 			return _returnEmptyFields(employee);
 		}
-
-		_EmployeeCreator.prototype.id = function() {
-			console.log(Math.floor(Math.random(1000) * 9999));
-		};
-
-		// _EmployeeCreator.prototype.firstname = function() {
-		// 	console.log(`${this.firstname} added to Database.`);
-		// };
-
-		// _EmployeeCreator.prototype.lastname = function() {
-		// 	console.log(`${this.lastname} added to Database.`);
-		// };
-
-		// _EmployeeCreator.prototype.password = function() {
-		// 	console.log('Password saved to Database.');
-		// };
-
-		// _EmployeeCreator.prototype.username = function(u) {
-		// 	console.log(`Username ${this.u} added to the database`);
-		// };
-
 		return employee;
 	};
 
+	_EmployeeCreator.prototype.id = function() {
+		const assignID = Math.floor(Math.random(1000) * 9999);
+		return assignID;
+	};
+
+	// _EmployeeCreator.prototype.firstname = function() {
+	// 	console.log(`${this.firstname} added to Database.`);
+	// };
+
+	// _EmployeeCreator.prototype.lastname = function() {
+	// 	console.log(`${this.lastname} added to Database.`);
+	// };
+
+	// _EmployeeCreator.prototype.password = function() {
+	// 	console.log('Password saved to Database.');
+	// };
+
+	// _EmployeeCreator.prototype.username = function(u) {
+	// 	console.log(`Username ${this.u} added to the database`);
+	// };
+
 	const _returnEmptyFields = function(obj) {
 		const emptyFields = [];
+		const populatedFields = [];
 
 		for (const key in obj) {
 			if (`${obj[key]}` === '') {
 				emptyFields.push(`${key}`);
-			};			
+			} else {
+				populatedFields.push(`${key}`);
+				populatedFields.push(`${key}`);
+			}			
 		};
 		emptyFields.push(true);
 		return emptyFields;
@@ -65,12 +70,17 @@ const main = (function() {
 
 		credHanlder: function (f,l,u,p) {
 			u = _EmployeeCreator(f,l,u,p);
-			return u;
+
+			if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
+				u.empID = u.id();
+				return u;
+			} else {
+				return u;
+			}
 		},
 	}
 	
 })();
-
 
 const uiController = (function() {
 	//"use strict";
@@ -99,6 +109,7 @@ const uiController = (function() {
 
 	_toggleDom = function(fields) {
 			_nodeListForEach(fields, function(current) {
+
 				current.classList.toggle('red_invalid_Entry');
 			});
 	};
@@ -140,6 +151,7 @@ const uiController = (function() {
 
 			// Create string for querySelectorAll
 			dom = '';
+
 			emptyFields.forEach(function(e,i,a) {
 				dom += '.' + a[i] + ',';
 			});
@@ -184,14 +196,9 @@ const appController = (function(uiCtrl, createEmp) {
 
 	 	if (newEmp[newEmp.length - 1] === true) {
 	 		newEmp.pop();
-
 	 		//HighLight the missing Fields
 	 		uiCtrl.invalidEntry(newEmp);	 		
-	 	} else{
-	 		console.log(newEmp);
-	 				
-	 		//Send credentials
-	 		//userLogin(newEmp);
+	 	} else {
 	 		uiCtrl.clearFields();
 	 	}
 	};
