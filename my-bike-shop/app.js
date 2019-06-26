@@ -39,19 +39,24 @@ const main = (function() {
 	// };
 
 	const _returnEmptyFields = function(obj) {
+
 		const emptyFields = [];
 		const populatedFields = [];
 
 		for (const key in obj) {
+
 			if (`${obj[key]}` === '') {
 				emptyFields.push(`${key}`);
+
 			} else {
-				populatedFields.push(`${key}`);
-				populatedFields.push(`${key}`);
-			}			
+				populatedFields.push(`${key}`);	
+			}
 		};
-		emptyFields.push(true);
-		return emptyFields;
+		populatedFields.pop();
+		return {
+			emptyFields,
+			populatedFields
+		};
 	};
 
 	const _testPrintEmpDatabase = function(){
@@ -59,26 +64,24 @@ const main = (function() {
 	};
 
 	return {
-		_EmployeeCreator,
-
+		
 		deleteEmptyProperties: function(obj) {
-		for (const key in obj) {
+			for (const key in obj) {
 			Reflect.deleteProperty(obj,`${key}`);
 		}
 		return obj;
 		},
 
 		credHanlder: function (f,l,u,p) {
-			u = _EmployeeCreator(f,l,u,p);
-
 			if ( (f !== '' && l !== '') && (u !== '' && p !== '') ) {
+				u = _EmployeeCreator(f,l,u,p);
 				u.empID = u.id();
 				return u;
 			} else {
-				return u;
+				return false;
 			}
-		},
-	}
+		}
+	};
 	
 })();
 
@@ -106,7 +109,6 @@ const uiController = (function() {
 		}
 	};
 
-
 	_toggleDom = function(fields) {
 			_nodeListForEach(fields, function(current) {
 
@@ -123,10 +125,10 @@ const uiController = (function() {
 			return 	{
 				lginUsr: document.querySelector(domStrings.loginUsr).value,
 				lginpwd: document.querySelector(domStrings.loginPwd).value,
-				registerFname: document.querySelector(domStrings.regFname).value,
-				registerLname: document.querySelector(domStrings.regLname).value,
-				registerUser: document.querySelector(domStrings.regUsr).value,
-				registerPwd: document.querySelector(domStrings.regPwd).value
+				regFname: document.querySelector(domStrings.regFname).value,
+				regLname: document.querySelector(domStrings.regLname).value,
+				regUsr: document.querySelector(domStrings.regUsr).value,
+				regPwd: document.querySelector(domStrings.regPwd).value
 			}
 		},
 
@@ -149,15 +151,15 @@ const uiController = (function() {
 		invalidEntry: function(emptyFields) {
 			let dom, fields;
 
-			// Create string for querySelectorAll
 			dom = '';
 
 			emptyFields.forEach(function(e,i,a) {
-				dom += '.' + a[i] + ',';
+				dom += a[i] + ',';
 			});
-
+			
+			console.log(typeof(dom));
 			//Modify dom string for querySelectorAll
-			dom = dom.slice(0, dom.length - 1);
+			dom = dom.slice(0, dom.length);
 			fields = document.querySelectorAll(dom);
 			_toggleDom(fields);
 		},
@@ -184,24 +186,35 @@ const appController = (function(uiCtrl, createEmp) {
 	};
 
 	const _addNewEmployee = function() {
-		let f, l, u, p, newEmp, userEntries, emptyFields;
+		let f, l, u, p, newEmp, userEntries;
+		
 
 		//Fetch Input Box Values
-	 	f = uiCtrl.sendCreds().registerFname;
-	 	l = uiCtrl.sendCreds().registerLname;
-	 	u = uiCtrl.sendCreds().registerUser;
-	 	p = uiCtrl.sendCreds().registerPwd;
+		let usrEntry = {
 
- 	 	newEmp = createEmp.credHanlder(f,l,u,p);
+		 	regFname: uiCtrl.sendCreds().regFname,
+		 	regLname: uiCtrl.sendCreds().regLname,
+		 	regUsr: uiCtrl.sendCreds().regUsr,
+		 	regPwd: uiCtrl.sendCreds().regPwd,
+	 	};
 
-	 	if (newEmp[newEmp.length - 1] === true) {
-	 		newEmp.pop();
-	 		//HighLight the missing Fields
-	 		uiCtrl.invalidEntry(newEmp);	 		
-	 	} else {
-	 		uiCtrl.clearFields();
+	 	_sendEmptyFields(usrEntry);
+	 	newEmp = createEmp.credHanlder(f,l,u,p);
+	 };
+
+
+	const _sendEmptyFields = function(obj) {
+		let emptyFields = [];
+
+		console.log(obj)
+		for (const key in obj) {
+
+		 	if (`${obj[key]}` === '') {
+		 		emptyFields.push(`.${key}`);
+		 	}
 	 	}
-	};
+		uiCtrl.invalidEntry(emptyFields);
+	 };
 
 	const _verifyInput = function() {
 		let u,p;
