@@ -115,7 +115,7 @@ const uiController = (function() {
 				current.classList.toggle('red_invalid_Entry');
 			});
 	};
-
+	
 	return {
 		sendDomStrings: function() {
 			return domStrings;
@@ -150,20 +150,19 @@ const uiController = (function() {
 
 		invalidEntry: function(emptyFields) {
 			let dom, fields;
-
 			dom = '';
 
 			emptyFields.forEach(function(e,i,a) {
 				dom += a[i] + ',';
 			});
 			
-			console.log(typeof(dom));
-			//Modify dom string for querySelectorAll
-			dom = dom.slice(0, dom.length);
-			fields = document.querySelectorAll(dom);
-			_toggleDom(fields);
+				//Modify dom string for querySelectorAll
+				dom = dom.slice(0, dom.length - 1);
+				console.log(dom);
+				fields = document.querySelectorAll(dom);
+				_toggleDom(fields);
 		},
-	}
+	};
 })();
 
 
@@ -175,7 +174,8 @@ const appController = (function(uiCtrl, createEmp) {
 	//Fetch DomStrings
 	doms = uiCtrl.sendDomStrings();
 
-	_getEventListeners = function(){
+
+	const _getEventListeners = function(){
 		document.querySelector(doms.registerBtn).addEventListener('click',_addNewEmployee);
 
 		document.addEventListener('keypress', function(e) {
@@ -186,35 +186,37 @@ const appController = (function(uiCtrl, createEmp) {
 	};
 
 	const _addNewEmployee = function() {
-		let f, l, u, p, newEmp, userEntries;
-		
+		let newEmp, userEntries, mptyFields, usrEntry,emptyFields;
+		emptyFields = [];
 
 		//Fetch Input Box Values
-		let usrEntry = {
+		usrEntry = {
 
 		 	regFname: uiCtrl.sendCreds().regFname,
 		 	regLname: uiCtrl.sendCreds().regLname,
 		 	regUsr: uiCtrl.sendCreds().regUsr,
-		 	regPwd: uiCtrl.sendCreds().regPwd,
+		 	regPwd: uiCtrl.sendCreds().regPwd
+
 	 	};
 
-	 	_sendEmptyFields(usrEntry);
+	 	// Check for empty fields.
+	 	for (let key in usrEntry) {
+	 		if (usrEntry[key] === '' ) {
+	 			console.log();
+	 		}
+	 	}
+
+
+
+	 	// Highlight empty fields
+	 	uiCtrl.invalidEntry(emptyFields);
+
+
+
+	 	// Create new Employee
 	 	newEmp = createEmp.credHanlder(f,l,u,p);
 	 };
 
-
-	const _sendEmptyFields = function(obj) {
-		let emptyFields = [];
-
-		console.log(obj)
-		for (const key in obj) {
-
-		 	if (`${obj[key]}` === '') {
-		 		emptyFields.push(`.${key}`);
-		 	}
-	 	}
-		uiCtrl.invalidEntry(emptyFields);
-	 };
 
 	const _verifyInput = function() {
 		let u,p;
