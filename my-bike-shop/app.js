@@ -195,21 +195,33 @@ const appController = (function(uiCtrl, createEmp) {
 		 	regFname: uiCtrl.sendCreds().regFname,
 		 	regLname: uiCtrl.sendCreds().regLname,
 		 	regUsr: uiCtrl.sendCreds().regUsr,
-		 	regPwd: uiCtrl.sendCreds().regPwd
-
+		 	regPwd: uiCtrl.sendCreds().regPwd,
 	 	};
 
+
+
 	 	// Check for empty fields.
-	 	for (let key in usrEntry) {
-	 		if (usrEntry[key] === '' ) {
-	 			console.log();
+
+	 	
+	 	let usrInput = {
+
+	 		regFname: {d: usrEntry.regFname},
+	 		regLname: {d: usrEntry.regLname},
+	 		regUsr: {d: usrEntry.regUsr},
+	 		regPwd: {d: usrEntry.regPwd},
+	 		empty: [],
+	 		run: function () {
+	 			for (let key in this) {
+	 			
+	 				if (this[key].d === '' ) {
+	 					this.empty.push(key);
+	 				}
+	 			};
+	 			console.log(this.empty);
 	 		}
-	 	}
-
-
-
-	 	// Highlight empty fields
-	 	uiCtrl.invalidEntry(emptyFields);
+	 	};
+	 	
+	 	 emptyFields = usrInput.run();
 
 
 
