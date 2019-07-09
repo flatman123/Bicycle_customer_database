@@ -96,8 +96,8 @@ const uiController = (function() {
 		registerBtn: '.registr_Btn',
 		regUsr: '.regUsr',
 		regPwd: '.regPwd',
-		regFname: '.firstname',
-		regLname: '.lastname',
+		regFname: '.regFname',
+		regLname: '.regLname',
 		displayLogin: '#login1',
 		displayRegister: '#register2',
 		displayCustomer: '#customer3'
@@ -148,12 +148,12 @@ const uiController = (function() {
 			return arr;
 		},
 
-		invalidEntry: function(emptyFields) {
+		highlightFields: function(emptyFields) {
 			let dom, fields;
 			dom = '';
 
 			emptyFields.forEach(function(e,i,a) {
-				dom += a[i] + ',';
+				dom += '.' + a[i]  + ',';
 			});
 			
 				//Modify dom string for querySelectorAll
@@ -161,6 +161,10 @@ const uiController = (function() {
 				console.log(dom);
 				fields = document.querySelectorAll(dom);
 				_toggleDom(fields);
+		},
+
+		removeHighlight: function() {
+
 		},
 	};
 })();
@@ -177,6 +181,10 @@ const appController = (function(uiCtrl, createEmp) {
 
 	const _getEventListeners = function(){
 		document.querySelector(doms.registerBtn).addEventListener('click',_addNewEmployee);
+		document.querySelector(doms.regFname).addEventListener('click',);
+		document.querySelector(doms.regLname).addEventListener('click',);
+		document.querySelector(doms.regPwd).addEventListener('click',);
+
 
 		document.addEventListener('keypress', function(e) {
 			if (e.keyCode === 13 || e.which === 13) {
@@ -187,8 +195,7 @@ const appController = (function(uiCtrl, createEmp) {
 
 	const _addNewEmployee = function() {
 		let newEmp, userEntries, mptyFields, usrEntry,emptyFields;
-		emptyFields = [];
-
+		
 		//Fetch Input Box Values
 		usrEntry = {
 
@@ -198,31 +205,34 @@ const appController = (function(uiCtrl, createEmp) {
 		 	regPwd: uiCtrl.sendCreds().regPwd,
 	 	};
 
-
-
 	 	// Check for empty fields.
-
-	 	
 	 	let usrInput = {
 
-	 		regFname: {d: usrEntry.regFname},
-	 		regLname: {d: usrEntry.regLname},
-	 		regUsr: {d: usrEntry.regUsr},
-	 		regPwd: {d: usrEntry.regPwd},
+	 		regFname: {subProperty: usrEntry.regFname},
+	 		regLname: {subProperty: usrEntry.regLname},
+	 		regUsr: {subProperty: usrEntry.regUsr},
+	 		regPwd: {subProperty: usrEntry.regPwd},
+	 		proerties: [];
 	 		empty: [],
+	 		valid: [],
 	 		run: function () {
-	 			for (let key in this) {
+	 			for (let property in this) {
 	 			
-	 				if (this[key].d === '' ) {
-	 					this.empty.push(key);
+	 				if (this[property].subProperty === '' ) {
+	 					this.empty.push(property);
+	 				} else if {
+	 					this.property.push(this.)
 	 				}
 	 			};
-	 			console.log(this.empty);
+	 			return this.empty;
 	 		}
 	 	};
 	 	
 	 	 emptyFields = usrInput.run();
 
+
+	 	 //Highlight missing fields
+	 	 uiCtrl.highlightFields(emptyFields);
 
 
 	 	// Create new Employee
@@ -230,7 +240,7 @@ const appController = (function(uiCtrl, createEmp) {
 	 };
 
 
-	const _verifyInput = function() {
+	const _verifyLoginInput = function() {
 		let u,p;
 
 		u = uiCtrl.sendCreds().lginUsr;
