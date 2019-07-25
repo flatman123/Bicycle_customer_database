@@ -220,13 +220,14 @@ const appController = (function(uiCtrl, createEmp) {
 
 	 	
 	 	 //Highlight missing fields
-	 	 uiCtrl.highlightFields(emptyFields);
-
+	 	uiCtrl.highlightFields(emptyFields);
+	 	
+	 	//Remove Highlighted fields
+	 	setTimeout(() => {uiCtrl.highlightFields(emptyFields)}, 5000);
 
 	 	// Create new Employee
 	 	newEmp = createEmp.credHanlder(f,l,u,p);
 	};
-
 
 	const _verifyLoginInput = function() {
 		let u,p;
