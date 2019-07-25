@@ -171,7 +171,7 @@ const uiController = (function() {
 
 
 const appController = (function(uiCtrl, createEmp) {
-	//"use strict";
+	
 	let getEventListeners, doms,crds,
 		 registrationInfo, f,l,u,p;
 
@@ -179,11 +179,12 @@ const appController = (function(uiCtrl, createEmp) {
 	doms = uiCtrl.sendDomStrings();
 
 
+
 	const _getEventListeners = function(){
-		document.querySelector(doms.registerBtn).addEventListener('click',_addNewEmployee);
-		document.querySelector(doms.regFname).addEventListener('click',);
-		document.querySelector(doms.regLname).addEventListener('click',);
-		document.querySelector(doms.regPwd).addEventListener('click',);
+		document.querySelector(doms.registerBtn).addEventListener('click', _addNewEmployee);
+		// document.querySelector(doms.regFname).addEventListener('click',);
+		// document.querySelector(doms.regLname).addEventListener('click',);
+		// document.querySelector(doms.regPwd).addEventListener('click',);
 
 
 		document.addEventListener('keypress', function(e) {
@@ -197,47 +198,34 @@ const appController = (function(uiCtrl, createEmp) {
 		let newEmp, userEntries, mptyFields, usrEntry,emptyFields;
 		
 		//Fetch Input Box Values
-		usrEntry = {
+		// usrEntry = {
 
-		 	regFname: uiCtrl.sendCreds().regFname,
-		 	regLname: uiCtrl.sendCreds().regLname,
-		 	regUsr: uiCtrl.sendCreds().regUsr,
-		 	regPwd: uiCtrl.sendCreds().regPwd,
-	 	};
+		//  	regFname: uiCtrl.sendCreds().regFname,
+		//  	regLname: uiCtrl.sendCreds().regLname,
+		//  	regUsr: uiCtrl.sendCreds().regUsr,
+		//  	regPwd: uiCtrl.sendCreds().regPwd,
+	 // 	};
 
 	 	// Check for empty fields.
-	 	let usrInput = {
 
-	 		regFname: {subProperty: usrEntry.regFname},
-	 		regLname: {subProperty: usrEntry.regLname},
-	 		regUsr: {subProperty: usrEntry.regUsr},
-	 		regPwd: {subProperty: usrEntry.regPwd},
-	 		proerties: [];
-	 		empty: [],
-	 		valid: [],
-	 		run: function () {
-	 			for (let property in this) {
-	 			
-	 				if (this[property].subProperty === '' ) {
-	 					this.empty.push(property);
-	 				} else if {
-	 					this.property.push(this.)
-	 				}
-	 			};
-	 			return this.empty;
-	 		}
-	 	};
+	 	let efields = new Map();
+	 	emptyFields = [];
+
+	 	efields.set('regFname', uiCtrl.sendCreds().regFname);
+	 	efields.set('regLname', uiCtrl.sendCreds().regLname);
+	 	efields.set('regUsr', uiCtrl.sendCreds().regUsr);
+	 	efields.set('regPwd', uiCtrl.sendCreds().regPwd);
+
+	 	efields.forEach((val,key,a) => val === '' ? emptyFields.push(key) : null);
+
 	 	
-	 	 emptyFields = usrInput.run();
-
-
 	 	 //Highlight missing fields
 	 	 uiCtrl.highlightFields(emptyFields);
 
 
 	 	// Create new Employee
 	 	newEmp = createEmp.credHanlder(f,l,u,p);
-	 };
+	};
 
 
 	const _verifyLoginInput = function() {
@@ -270,3 +258,5 @@ const appController = (function(uiCtrl, createEmp) {
 })(uiController, main);
 
 appController.run();
+
+
